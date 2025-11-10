@@ -1,62 +1,36 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
 namespace LibraryManager
 {
-    // Class to represent a Book
+    // Represents a single Book entity
     class Book
     {
+        public int Id { get; set; }  // Auto-generated unique ID
         public string Title { get; set; }
         public string Author { get; set; }
         public int Year { get; set; }
+
+        public override string ToString()
+        {
+            return $"[{Id}] {Title} by {Author} ({Year})";
+        }
     }
 
-    class Program
+    // Handles all operations related to the Library
+    class Library
     {
-        // List to store books
-        static List<Book> library = new List<Book>();
+        private List<Book> books = new List<Book>();
+        private const string FilePath = "library.json"; // Save file
 
-        static void Main()
+        public Library()
         {
-            bool running = true;
-
-            while (running)
-            {
-                Console.WriteLine("\n====== Library Management System ======");
-                Console.WriteLine("1. Add Book");
-                Console.WriteLine("2. View All Books");
-                Console.WriteLine("3. Search for a Book");
-                Console.WriteLine("4. Remove a Book");
-                Console.WriteLine("5. Exit");
-                Console.Write("Enter your choice: ");
-                string choice = Console.ReadLine();
-
-                switch (choice)
-                {
-                    case "1":
-                        AddBook();
-                        break;
-                    case "2":
-                        ViewBooks();
-                        break;
-                    case "3":
-                        SearchBook();
-                        break;
-                    case "4":
-                        RemoveBook();
-                        break;
-                    case "5":
-                        running = false;
-                        Console.WriteLine("Goodbye!");
-                        break;
-                    default:
-                        Console.WriteLine("❌ Invalid choice! Please try again.");
-                        break;
-                }
-            }
+            LoadData();
         }
 
-        static void AddBook()
+        public void AddBook()
         {
             Console.WriteLine("\n--- Add New Book ---");
             Console.Write("Enter Title: ");
@@ -64,61 +38,158 @@ namespace LibraryManager
             Console.Write("Enter Author: ");
             string author = Console.ReadLine();
             Console.Write("Enter Year: ");
-            int year;
 
-            while (!int.TryParse(Console.ReadLine(), out year))
+            if (!int.TryParse(Console.ReadLine(), out int year))
             {
-                Console.Write("Please enter a valid year: ");
-            }
-
-            library.Add(new Book { Title = title, Author = author, Year = year });
-            Console.WriteLine("✅ Book added successfully!");
-        }
-
-        static void ViewBooks()
-        {
-            Console.WriteLine("\n--- All Books ---");
-            if (library.Count == 0)
-            {
-                Console.WriteLine("No books in the library yet.");
+                Console.WriteLine("Invalid year. Book not added.");
                 return;
             }
 
-            foreach (var book in library)
-            {
-                Console.WriteLine($"📖 {book.Title} by {book.Author} ({book.Year})");
-            }
+            int nextId = books.Count > 0 ? books[^1].Id + 1 : 1;
+            Book newBook = new Book { Id = nextId, Title = title, Author = author, Year = year };
+            books.Add(newBook);
+            SaveData();
+
+            Console.WriteLine($"✅ Book added successfully! ID = {newBook.Id}");
         }
 
-        static void SearchBook()
+        public void ViewBooks()
+        {
+            Console.WriteLine("\n--- All Books ---");
+            if (books.Count == 0)
+            {
+                Console.WriteLine("No books available in the library.");
+                return;
+            }
+
+            foreach (var book in books)
+                Console.WriteLine(book);
+        }
+
+        public void SearchBooks()
         {
             Console.Write("\nEnter title or author to search: ");
             string keyword = Console.ReadLine().ToLower();
-            bool found = false;
+            var results = books.FindAll(b =>
+                b.Title.ToLower().Contains(keyword) ||
+                b.Author.ToLower().Contains(keyword));
 
-            foreach (var book in library)
-            {
-                if (book.Title.ToLower().Contains(keyword) || book.Author.ToLower().Contains(keyword))
-                {
-                    Console.WriteLine($"🔍 Found: {book.Title} by {book.Author} ({book.Year})");
-                    found = true;
-                }
-            }
-
-            if (!found)
+            if (results.Count == 0)
                 Console.WriteLine("No matching books found.");
+            else
+            {
+                Console.WriteLine("\n--- Search Results ---");
+                foreach (var b in results)
+                    Console.WriteLine(b);
+            }
         }
 
-        static void RemoveBook()
+        public void RemoveBook()
         {
-            Console.Write("\nEnter the title of the book to remove: ");
-            string title = Console.ReadLine();
-            int removed = library.RemoveAll(b => b.Title.Equals(title, StringComparison.OrdinalIgnoreCase));
+            Console.Write("\nEnter the ID of the book to remove: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.WriteLine("Invalid ID!");
+                return;
+            }
 
-            if (removed > 0)
-                Console.WriteLine("🗑️ Book removed successfully!");
-            else
-                Console.WriteLine("❌ Book not found.");
+            var bookToRemove = books.Find(b => b.Id == id);
+            if (bookToRemove == null)
+            {
+                Console.WriteLine("Book not found.");
+                return;
+            }
+
+            books.Remove(bookToRemove);
+            SaveData();
+            Console.WriteLine("🗑️ Book removed successfully!");
+        }
+
+        public void UpdateBook()
+        {
+            Console.Write("\nEnter the ID of the book to update: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.WriteLine("Invalid ID!");
+                return;
+            }
+
+            var book = books.Find(b => b.Id == id);
+            if (book == null)
+            {
+                Console.WriteLine("Book not found.");
+                return;
+            }
+
+            Console.WriteLine($"Editing: {book.Title} by {book.Author} ({book.Year})");
+            Console.Write("Enter new title (leave blank to keep): ");
+            string title = Console.ReadLine();
+            Console.Write("Enter new author (leave blank to keep): ");
+            string author = Console.ReadLine();
+            Console.Write("Enter new year (leave blank to keep): ");
+            string yearInput = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(title)) book.Title = title;
+            if (!string.IsNullOrWhiteSpace(author)) book.Author = author;
+            if (int.TryParse(yearInput, out int newYear)) book.Year = newYear;
+
+            SaveData();
+            Console.WriteLine("✏️ Book updated successfully!");
+        }
+
+        // --- Data Persistence Methods ---
+        private void SaveData()
+        {
+            string json = JsonSerializer.Serialize(books, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(FilePath, json);
+        }
+
+        private void LoadData()
+        {
+            if (File.Exists(FilePath))
+            {
+                string json = File.ReadAllText(FilePath);
+                books = JsonSerializer.Deserialize<List<Book>>(json) ?? new List<Book>();
+            }
+        }
+    }
+
+    // Main program entry point
+    class Program
+    {
+        static void Main()
+        {
+            Library library = new Library();
+            bool running = true;
+
+            while (running)
+            {
+                Console.WriteLine("\n====== Advanced Library Management System ======");
+                Console.WriteLine("1. Add Book");
+                Console.WriteLine("2. View All Books");
+                Console.WriteLine("3. Search Books");
+                Console.WriteLine("4. Update Book");
+                Console.WriteLine("5. Remove Book");
+                Console.WriteLine("6. Exit");
+                Console.Write("Choose an option: ");
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1": library.AddBook(); break;
+                    case "2": library.ViewBooks(); break;
+                    case "3": library.SearchBooks(); break;
+                    case "4": library.UpdateBook(); break;
+                    case "5": library.RemoveBook(); break;
+                    case "6":
+                        running = false;
+                        Console.WriteLine("Goodbye!");
+                        break;
+                    default:
+                        Console.WriteLine("Invalid choice, try again.");
+                        break;
+                }
+            }
         }
     }
 }
