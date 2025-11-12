@@ -35,8 +35,20 @@ namespace LibraryManager
             Console.WriteLine("\n--- Add New Book ---");
             Console.Write("Enter Title: ");
             string title = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                Console.WriteLine("Title cannot be empty. Book not added.");
+                return;
+            }
+
             Console.Write("Enter Author: ");
             string author = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(author))
+            {
+                Console.WriteLine("Author cannot be empty. Book not added.");
+                return;
+            }
+
             Console.Write("Enter Year: ");
 
             if (!int.TryParse(Console.ReadLine(), out int year))
@@ -45,7 +57,7 @@ namespace LibraryManager
                 return;
             }
 
-            int nextId = books.Count > 0 ? books[^1].Id + 1 : 1;
+            int nextId = books.Count > 0 ? books.Max(b => b.Id) + 1 : 1;
             Book newBook = new Book { Id = nextId, Title = title, Author = author, Year = year };
             books.Add(newBook);
             SaveData();
@@ -100,9 +112,20 @@ namespace LibraryManager
                 return;
             }
 
-            books.Remove(bookToRemove);
-            SaveData();
-            Console.WriteLine("🗑️ Book removed successfully!");
+            Console.WriteLine($"You are about to remove: {bookToRemove}");
+            Console.Write("Are you sure? (y/n): ");
+            string confirmation = Console.ReadLine().ToLower();
+
+            if (confirmation == "y")
+            {
+                books.Remove(bookToRemove);
+                SaveData();
+                Console.WriteLine("🗑️ Book removed successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Remove operation cancelled.");
+            }
         }
 
         public void UpdateBook()
@@ -131,7 +154,18 @@ namespace LibraryManager
 
             if (!string.IsNullOrWhiteSpace(title)) book.Title = title;
             if (!string.IsNullOrWhiteSpace(author)) book.Author = author;
-            if (int.TryParse(yearInput, out int newYear)) book.Year = newYear;
+            if (!string.IsNullOrWhiteSpace(yearInput))
+            {
+                if (int.TryParse(yearInput, out int newYear))
+                {
+                    book.Year = newYear;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid year format. Year not updated.");
+                }
+            }
+
 
             SaveData();
             Console.WriteLine("✏️ Book updated successfully!");
@@ -140,16 +174,30 @@ namespace LibraryManager
         // --- Data Persistence Methods ---
         private void SaveData()
         {
-            string json = JsonSerializer.Serialize(books, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(FilePath, json);
+            try
+            {
+                string json = JsonSerializer.Serialize(books, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(FilePath, json);
+            }
+            catch (Exception ex) when (ex is IOException || ex is JsonException)
+            {
+                Console.WriteLine($"Error saving data: {ex.Message}");
+            }
         }
 
         private void LoadData()
         {
-            if (File.Exists(FilePath))
+            if (!File.Exists(FilePath)) return;
+            try
             {
                 string json = File.ReadAllText(FilePath);
                 books = JsonSerializer.Deserialize<List<Book>>(json) ?? new List<Book>();
+            }
+            catch (Exception ex) when (ex is IOException || ex is JsonException)
+            {
+                Console.WriteLine($"Error loading data: {ex.Message}");
+                // Optional: Handle the error more gracefully, e.g., by starting with an empty library
+                books = new List<Book>();
             }
         }
     }
