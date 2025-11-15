@@ -1,0 +1,15 @@
+C:\Users\THIMIRA\C--project\src\bin\Debug\net8.0\library-manager.exe
+C:\Users\THIMIRA\C--project\src\bin\Debug\net8.0\library-manager.deps.json
+C:\Users\THIMIRA\C--project\src\bin\Debug\net8.0\library-manager.runtimeconfig.json
+C:\Users\THIMIRA\C--project\src\bin\Debug\net8.0\library-manager.dll
+C:\Users\THIMIRA\C--project\src\bin\Debug\net8.0\library-manager.pdb
+C:\Users\THIMIRA\C--project\src\obj\Debug\net8.0\library-manager.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\THIMIRA\C--project\src\obj\Debug\net8.0\library-manager.AssemblyInfoInputs.cache
+C:\Users\THIMIRA\C--project\src\obj\Debug\net8.0\library-manager.AssemblyInfo.cs
+C:\Users\THIMIRA\C--project\src\obj\Debug\net8.0\library-manager.csproj.CoreCompileInputs.cache
+C:\Users\THIMIRA\C--project\src\obj\Debug\net8.0\library-manager.sourcelink.json
+C:\Users\THIMIRA\C--project\src\obj\Debug\net8.0\library-manager.dll
+C:\Users\THIMIRA\C--project\src\obj\Debug\net8.0\refint\library-manager.dll
+C:\Users\THIMIRA\C--project\src\obj\Debug\net8.0\library-manager.pdb
+C:\Users\THIMIRA\C--project\src\obj\Debug\net8.0\library-manager.genruntimeconfig.cache
+C:\Users\THIMIRA\C--project\src\obj\Debug\net8.0\ref\library-manager.dll
