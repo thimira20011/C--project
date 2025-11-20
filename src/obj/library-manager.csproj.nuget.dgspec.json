@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\THIMIRA\\C--project\\src\\library-manager.csproj": {}
+    "/home/runner/work/C--project/C--project/src/library-manager.csproj": {}
   },
   "projects": {
-    "C:\\Users\\THIMIRA\\C--project\\src\\library-manager.csproj": {
+    "/home/runner/work/C--project/C--project/src/library-manager.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\THIMIRA\\C--project\\src\\library-manager.csproj",
+        "projectUniqueName": "/home/runner/work/C--project/C--project/src/library-manager.csproj",
         "projectName": "library-manager",
-        "projectPath": "C:\\Users\\THIMIRA\\C--project\\src\\library-manager.csproj",
-        "packagesPath": "C:\\Users\\THIMIRA\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\THIMIRA\\C--project\\src\\obj\\",
+        "projectPath": "/home/runner/work/C--project/C--project/src/library-manager.csproj",
+        "packagesPath": "/home/runner/.nuget/packages/",
+        "outputPath": "/home/runner/work/C--project/C--project/src/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\THIMIRA\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/runner/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -38,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -59,7 +59,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.307/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
