@@ -1,64 +1,214 @@
-# C--project
+# 📚 Library Management System
 
-Simple console-based Library Management application written in C#.
+A modern, console-based Library Management System built with C# and .NET 9.0. This application provides a complete solution for managing a personal or small library collection with an intuitive text-based interface and persistent JSON storage.
 
-## Overview
-This small program implements a text-menu driven library manager that allows adding, viewing, searching, and removing books. Core types and logic live in `program.cs`:
+## ✨ Features
 
-- Book model: `LibraryManager.Book` (`program.cs`)  
-- Application entry + menu: `LibraryManager.Program` (`program.cs`)  
-- Operations: `LibraryManager.Program.AddBook`, `LibraryManager.Program.ViewBooks`, `LibraryManager.Program.SearchBook`, `LibraryManager.Program.RemoveBook`
+- **📖 Add Books** - Add new books with title, author, and publication year
+- **👀 View All Books** - Display the complete library collection with formatted output
+- **🔍 Search Books** - Search by title or author with case-insensitive matching
+- **✏️ Update Books** - Modify book details (title, author, or year)
+- **🗑️ Remove Books** - Delete books with confirmation prompts
+- **💾 Persistent Storage** - Automatic data persistence using JSON file storage
+- **✅ Input Validation** - Comprehensive validation for user inputs
+- **🎨 User-Friendly Interface** - Clean, intuitive menu-driven console interface
 
-## Features
-- Add a book (title, author, year)
-- View all books
-- Search books by title or author
-- Remove a book by title
+## 🏗️ Project Structure
 
-## Prerequisites
-- .NET SDK (recommended) or the C# compiler (`csc`). Mono can be used to run the compiled executable on macOS/Linux.
+The application follows a clean, modular architecture with separation of concerns:
 
-## Build & Run
-
-Option A — using csc (C# compiler):
-```sh
-csc program.cs
-# On Windows:
-program.exe
-# On macOS/Linux (with Mono installed):
-mono program.exe
+```
+C--project/
+├── src/
+│   ├── Program.cs       # Application entry point
+│   ├── Book.cs          # Book model/entity
+│   ├── Library.cs       # Core business logic and operations
+│   ├── DataManager.cs   # JSON data persistence layer
+│   ├── UIManager.cs     # User interface and menu system
+│   └── library-manager.csproj
+├── C--project.sln       # Visual Studio solution file
+└── README.md
 ```
 
-Option B — using the dotnet SDK:
-```sh
-mkdir tmp && cd tmp
-dotnet new console --force
-# Replace the generated Program.cs content with the project's program.cs (one level up)
-dotnet run
+### Architecture Overview
+
+- **`Book.cs`**: Defines the Book entity with properties (Id, Title, Author, Year)
+- **`Library.cs`**: Manages the book collection and business operations (CRUD operations)
+- **`DataManager.cs`**: Handles data persistence to/from JSON file
+- **`UIManager.cs`**: Manages all user interactions and console I/O
+- **`Program.cs`**: Application entry point that initializes and runs the system
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [.NET SDK 9.0](https://dotnet.microsoft.com/download) or later
+- Any text editor or IDE (Visual Studio, Visual Studio Code, Rider, etc.)
+
+### Installation & Running
+
+#### Option 1: Using .NET CLI (Recommended)
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/thimira20011/C--project.git
+   cd C--project
+   ```
+
+2. **Build the project:**
+   ```bash
+   dotnet build
+   ```
+
+3. **Run the application:**
+   ```bash
+   dotnet run --project src/library-manager.csproj
+   ```
+
+#### Option 2: Using Visual Studio
+
+1. Open `C--project.sln` in Visual Studio
+2. Press `F5` or click "Start" to build and run
+3. The console window will appear with the application menu
+
+#### Option 3: Build and Run Executable
+
+```bash
+cd C--project
+dotnet build -c Release
+cd src/bin/Release/net9.0
+./library-manager
 ```
 
-If you prefer a quick test without creating a new project, compile with `csc` as above and run the produced executable.
+## 📖 Usage Guide
 
-## Usage
-Run the compiled executable and follow the on-screen menu:
+### Main Menu
 
-1 — Add Book  
-2 — View All Books  
-3 — Search for a Book  
-4 — Remove a Book  
-5 — Exit
+When you run the application, you'll see the following menu:
 
-Follow prompts to enter book details when adding or searching. Search supports title or author matching.
+```
+====== Advanced Library Management System ======
+1. Add Book
+2. View All Books
+3. Search Books
+4. Update Book
+5. Remove Book
+6. Exit
+Choose an option:
+```
 
-## Contributing
-Small improvements, bug fixes, and formatting tweaks are welcome. Please open a pull request with your changes or submit an issue describing the problem.
+### Example Workflow
 
-Guidelines:
-- Keep changes focused and well-documented.
-- Include a short description in the PR/commit message.
-- Add tests or manual verification steps if applicable.
+1. **Add a Book:**
+   - Select option `1`
+   - Enter title: `The Great Gatsby`
+   - Enter author: `F. Scott Fitzgerald`
+   - Enter year: `1925`
+   - Book is added with auto-generated ID
 
-## License
-This repository currently has no license. Add a LICENSE file if you want to specify terms. If you'd like, I can suggest a license to add (e.g., MIT, Apache 2.0) and provide the file content.
+2. **View All Books:**
+   - Select option `2`
+   - See all books in format: `[ID] Title by Author (Year)`
 
-Thank you!
+3. **Search Books:**
+   - Select option `3`
+   - Enter search term (matches title or author)
+   - View matching results
+
+4. **Update a Book:**
+   - Select option `4`
+   - Enter book ID
+   - Enter new values (leave blank to keep current)
+   - Changes are saved automatically
+
+5. **Remove a Book:**
+   - Select option `5`
+   - Enter book ID
+   - Confirm deletion (y/n)
+   - Book is removed from the library
+
+### Data Storage
+
+- Library data is automatically saved to `library.json` in the application directory
+- Data persists between application sessions
+- File is created automatically on first use
+- Uses human-readable JSON format for easy inspection
+
+## 🛠️ Technology Stack
+
+- **Language**: C# 9.0+
+- **Framework**: .NET 9.0
+- **Data Format**: JSON
+- **Serialization**: System.Text.Json
+- **Architecture**: Object-Oriented, Separation of Concerns
+
+## 🧪 Development
+
+### Building for Development
+
+```bash
+dotnet build
+```
+
+### Building for Release
+
+```bash
+dotnet build -c Release
+```
+
+### Code Style
+
+The project follows standard C# coding conventions:
+- PascalCase for class names and public members
+- camelCase for private fields and local variables
+- Meaningful variable and method names
+- Comprehensive error handling
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how you can help:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/AmazingFeature`)
+3. **Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** to the branch (`git push origin feature/AmazingFeature`)
+5. **Open** a Pull Request
+
+### Contribution Guidelines
+
+- Ensure your code follows the existing style and conventions
+- Add comments for complex logic
+- Test your changes thoroughly
+- Update documentation if needed
+- Keep commits focused and well-described
+
+### Ideas for Contribution
+
+- Add unit tests
+- Implement book categories/genres
+- Add ISBN support
+- Create a book lending/borrowing system
+- Add export/import functionality (CSV, XML)
+- Implement book ratings and reviews
+- Add multi-user support
+
+## 📝 License
+
+This project is currently unlicensed. Feel free to use it for educational purposes. If you plan to use or distribute this code, please consider adding an appropriate license (such as MIT or Apache 2.0).
+
+## 👤 Author
+
+**thimira20011**
+- GitHub: [@thimira20011](https://github.com/thimira20011)
+
+## 🙏 Acknowledgments
+
+- Built as a learning project to demonstrate C# fundamentals
+- Showcases OOP principles and clean code architecture
+- Inspired by real-world library management needs
+
+---
+
+⭐ If you find this project useful, please consider giving it a star!
+
+**Happy Reading! 📚✨**
